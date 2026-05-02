@@ -1,0 +1,31 @@
+name: KubeGuard-SBOM
+
+on:
+  push:
+    tags:
+      - 'v*' # Triggers on v1.0, v2.1.4, etc.
+
+jobs:
+  generate-sbom:
+    name: Generate SBOM
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Run Syft to generate SBOM
+        # Using the official Anchore action which wraps Syft
+        uses: anchore/sbom-action@v0
+        with:
+          # We are scanning the controller directory specifically
+          path: ./controller
+          format: cyclonedx-json
+          output-file: ./kubeguard-sbom.json
+
+      - name: Upload SBOM Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: kubeguard-sbom-cyclonedx
+          path: ./kubeguard-sbom.json
+          # Retention policy (Optional: helps keep your storage clean)
+          retention-days: 90
