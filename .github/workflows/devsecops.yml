@@ -3,18 +3,17 @@ name : KubeGuard-Scan
 on:
   push:
     branches: ["main"]
-  schedules:
+  schedule:
     - cron: "0 0 * * *"
 
 jobs:
-  gitleaks
+  gitleaks:
+    runs-on: ubuntu-latest
 
-runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
 
-steps:
-  - name: Checkout Code
-    uses: actions/checkout@v4
-
-  - name: Run Gitleaks
-    uses: gitleaks/gitleaks-action@v2
+      - name: Run Gitleaks
+        uses: gitleaks/gitleaks-action@v2
 
