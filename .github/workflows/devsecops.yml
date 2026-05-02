@@ -79,7 +79,7 @@ jobs:
       - name: Run Trivy Image scan 
         uses: aquasecurity/trivy-action@master
         with:
-          image-ref: controller:${{ github.sha }}
+          image-ref: kubeguard-controller:${{ github.sha }}
           format: table
           exit-code: "1"
           severity: "CRITICAL"
