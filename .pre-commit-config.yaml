@@ -1,0 +1,8 @@
+# .pre-commit-config.yaml
+repos:
+  - repo: https://github.com/gitleaks/gitleaks
+    rev: v8.18.2
+    hooks:
+      - id: gitleaks
+        # This tells gitleaks to use your local .gitleaks.toml config
+        args: ["--config=.gitleaks.toml", "--verbose"]
