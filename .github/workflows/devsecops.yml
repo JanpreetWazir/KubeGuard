@@ -40,3 +40,47 @@ jobs:
 
       - name: Run Bandit Scan
         run: bandit -r . -ll
+  
+  dependency-scan:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+      
+      - name: Install pip-audit
+        run: pip install pip-audit
+      - name: Run pip-audit 
+        run: |
+          if [ -f controller/requirements.txt ]; then pip-audit -r controller/requirements.txt
+          
+          else echo "No requirements.txt found, skipping pip-audit"
+          fi       
+
+      - name: Run Trivy FS scan 
+        uses: aquasecurity/trivy-action@master
+        with:
+          scan-type: "fs" 
+          format: "table" 
+          exit-code: "1"
+          severity: "HIGH,CRITICAL"
+
+  container-scan:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+        # This builds the image locally on the GitHub Runner
+      - name: Build Docker Image
+        run: docker build -t kubeguard-controller:${{ github.sha }} ./controller
+        
+        # This scans that specific image for OS-level vulnerabilities
+      
+      - name: Run Trivy Image scan 
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: controller:${{ github.sha }}
+          format: table
+          exit-code: "1"
+          severity: "CRITICAL"
+
