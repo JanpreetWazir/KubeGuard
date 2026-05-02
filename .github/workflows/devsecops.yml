@@ -84,3 +84,27 @@ jobs:
           exit-code: "1"
           severity: "CRITICAL"
 
+  iac-scan:
+    name: Checkov Iac Scan
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      security-events: write 
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Run Checkov Scan
+        uses: bridgecrewio/checkov-action@master
+        with:
+          directory: infra/
+          soft_fail: true
+          output_format: sarif
+          output_file_path: results.sarif
+      
+      - name: upload sarif Files
+        uses: github/codeql-action/upload-sarif@v3
+        if: always()
+        with:
+          sarif_file: results.sarif
