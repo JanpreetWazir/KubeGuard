@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: security-test-pod
+  namespace: default
+spec:
+  containers:
+  - name: web-server
+    image: nginx:1.19
+    # SECURITY MISTAKE 1: Running as Privileged
+    securityContext:
+      privileged: true
+      runAsUser: 0 # SECURITY MISTAKE 2: Running as Root (UID 0)
+    
+    # SECURITY MISTAKE 3: No resource limits defined
+    # (Checkov will flag this as a potential Denial of Service risk)
