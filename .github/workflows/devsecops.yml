@@ -1,0 +1,20 @@
+name : KubeGuard-Scan
+
+on:
+  push:
+    branches: ["main"]
+  schedules:
+    - cron: "0 0 * * *"
+
+jobs:
+  gitleaks
+
+runs-on: ubuntu-latest
+
+steps:
+  - name: Checkout Code
+    uses: actions/checkout@v4
+
+  - name: Run Gitleaks
+    uses: gitleaks/gitleaks-action@v2
+
