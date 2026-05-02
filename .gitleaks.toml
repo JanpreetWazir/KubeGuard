@@ -1,0 +1,34 @@
+# .gitleaks.toml
+
+[allowlist]
+   description = "Ignore comman non-secet files"
+   paths = ["\\.gitleaks\\.toml","go\\.sum"]
+
+[[rules]]
+    description = "AWS Access Key"
+    id = "aws-access-key"
+    regex = '''\b(A3T[A-Z0-9]|AKIA|AGPA|AIDA|AROA|AIPA|ANPA|ANVA|ASIA)[A-Z0-9]{16}\b'''  
+    # Matches full AWS access keys like AKIAIOSFODNN7EXAMPLE
+    
+    keywords = ["akia" , "agpa", "aida"]
+
+
+[[rules]]
+    description = "KubeGuard Custom Admin Token"
+    id = "kubeguard-token"
+    regex = '''\bkubeguard_[a-z0-9]{32}\b'''  
+    # Looks for tokens like kubeguard_abc123... (32 lowercase alphanumeric chars)
+    
+    keywords = ["kubeguard"]
+
+
+[[rules]]
+    description = "Generic Password in YAML"
+    id = "generic-password"
+    regex = '''(?i)\b(password|passwd|pwd)\s*[:=]\s*["']?[^"\s]+["']?'''  
+    # Matches password assignments like:
+    # password: secret123
+    # pwd="admin@123"
+    # passwd = mypass
+    
+    keywords = ["password"]
