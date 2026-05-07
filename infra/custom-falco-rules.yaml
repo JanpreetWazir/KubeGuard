@@ -1,0 +1,14 @@
+custom_rules.yaml: |-
+  - rule: Kubeguard - Suspicious Shell in Container
+    desc: Detect interactive shell inside container not initiated by expected parent
+    condition: >
+      container
+      and proc.name in (bash, sh, zsh)
+      and not proc.aname in (kubectl, docker, containerd-shim)
+    output: >
+      [KubeGuard] Suspicious shell detected
+      (user=%user.name pod=%k8s.pod.name ns=%k8s.ns.name
+      container=%container.name image=%container.image.repository
+      cmd=%proc.cmdline)
+    priority: CRITICAL
+    source: syscall

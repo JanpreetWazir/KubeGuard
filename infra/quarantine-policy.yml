@@ -1,0 +1,15 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: kubeguard-quarantine-policy
+  namespace: default
+spec:
+  podSelector: 
+    matchLabels:
+      security.kubeguard/status: quarantined
+  policyTypes:
+  - Ingress
+  - Egress
+  ingress: []
+  egress: []
+  

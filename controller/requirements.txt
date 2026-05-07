@@ -1,2 +1,4 @@
-flask==0.12
-requests==2.18.4
+fastapi
+uvicorn
+kubernetes
+python-json-logger
