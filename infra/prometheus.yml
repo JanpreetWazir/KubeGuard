@@ -1,0 +1,7 @@
+global:
+  scrape_interval: 5s
+
+scrape_configs:
+  - job_name: 'kubeguard-controller'
+    static_configs:
+      - targets: ['host.docker.internal:9000'] # This points to your controller

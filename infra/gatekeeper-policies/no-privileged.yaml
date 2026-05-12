@@ -1,0 +1,31 @@
+apiVersion: templates.gatekeeper.sh/v1beta1
+kind: ConstraintTemplate
+metadata:
+  name: k8snoprivileged # <--- Removed the 's'
+spec:
+  crd:
+    spec:
+      names:
+        kind: K8sNoPrivileged
+      validation:
+        openAPIV3Schema:
+          type: object
+  targets:
+    - target: admission.k8s.gatekeeper.sh
+      rego: |
+        package k8snoprivileged # <--- Removed the 's'
+
+        violation[{"msg": msg}] {
+          input.review.object.spec.containers[_].securityContext.privileged == true
+          msg := sprintf("Privileged container not allowed: %s", [input.review.object.metadata.name])
+        }
+---
+apiVersion: constraints.gatekeeper.sh/v1beta1
+kind: K8sNoPrivileged
+metadata:
+  name: disallow-privileged
+spec:
+  match:
+    kinds:
+      - apiGroups: [""]
+        kinds: ["Pod"]
